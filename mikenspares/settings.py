@@ -9,8 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+
 ALLOWED_HOSTS = [
-    "your-backend.onrender.com",  # Replace with your Render app URL
+    "miken-backend.onrender.com",  # ✅ no https://
     "localhost",
     "127.0.0.1",
 ]
@@ -24,19 +25,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third-party
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'corsheaders',
 
-    'store',  # your custom app
+    # Local apps
+    'store',
 ]
 
 # Middleware
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -48,7 +51,7 @@ MIDDLEWARE = [
 # CORS (allow frontend)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://mikenspares.netlify.app",  # Replace with your Netlify domain
+    "https://mikenspares.netlify.app",  # ✅ Netlify frontend
 ]
 
 # Django REST Framework
@@ -72,7 +75,7 @@ SIMPLE_JWT = {
 # Database (PostgreSQL on Render)
 DATABASES = {
     "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
         ssl_require=True
     )
